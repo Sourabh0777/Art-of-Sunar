@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  orders        Order[]
+  sessions      Session[]
+  stores        Store[]
+  Cart          Cart[]
+}
+
+model Store {
+  id          String      @id
+  name        String
+  description String?
+  userId      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  OrderItem   OrderItem[]
+  Product     Product[]
+  User        User        @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Category {
+  slug     String    @id
+  name     String
+  products Product[]
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  slug        String
+  description String?
+  price       Decimal
+  images      Json
+  storeId     String
+  categoryId  String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+  Category    Category    @relation(fields: [categoryId], references: [slug])
+  Store       Store       @relation(fields: [storeId], references: [id])
+  CartItem    CartItem[]
+
+  @@index([storeId, categoryId, name, slug])
+}
+
+model Order {
+  id         String             @id
+  totalPrice Decimal
+  token      String
+  status     TRANSACTION_STATUS
+  userId     String
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  User       User               @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  storeId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+  store     Store   @relation(fields: [storeId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Cart {
+  id          String      @id @default(uuid())
+  userId      String
+  totalPrice  Float
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  items       CartItem[]
+  user        User       @relation(fields: [userId], references: [id])
+  
+}
+
+model CartItem {
+  id          String      @id @default(uuid())
+  cartId      String
+  productId   String
+  quantity    Int
+  price       Float
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  cart        Cart       @relation(fields: [cartId], references: [id])
+  product     Product    @relation(fields: [productId], references: [id])
+}
+
+enum TRANSACTION_STATUS {
+  PENDING
+  PAID
+  CANCELED
+}
+
+model Element {
+  id            Int       @id @default(autoincrement())
+  name          String
+  price         Float
+  quantity      Int
+}
+
+model ShippingType {
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String?
+  price        Float
+  deliveryTime Int      // Delivery time in days
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
