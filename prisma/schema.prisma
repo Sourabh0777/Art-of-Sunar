@@ -68,27 +68,46 @@ model Store {
   @@index([userId])
 }
 
+model Element {
+  id      Int       @id @default(autoincrement())
+  name    String
+  price   Float
+  Product Product[]
+}
+
 model Category {
-  slug     String    @id
-  name     String
-  products Product[]
+  slug        String    @id
+  id          String
+  name        String
+  description String
+  Product     Product[]
 }
 
 model Product {
-  id          String      @id @default(uuid())
-  name        String
-  slug        String
-  description String?
-  price       Decimal
-  images      Json
-  storeId     String
-  categoryId  String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  orderItems  OrderItem[]
-  Category    Category    @relation(fields: [categoryId], references: [slug])
-  Store       Store       @relation(fields: [storeId], references: [id])
-  CartItem    CartItem[]
+  id            String      @id @default(uuid())
+  name          String
+  elementId     Int
+  weightingrams Int
+  metalAmount   Float
+  makingCharges Float
+  stock         Int
+  rating        Int
+  gst           Float
+  discount      Float
+  totalAmount   Int
+  slug          String
+  description   String?
+  price         Decimal
+  images        Json
+  storeId       String
+  categoryId    String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  orderItems    OrderItem[]
+  Category      Category    @relation(fields: [categoryId], references: [slug])
+  Store         Store       @relation(fields: [storeId], references: [id])
+  CartItem      CartItem[]
+  Element       Element     @relation(fields: [elementId], references: [id])
 
   @@index([storeId, categoryId, name, slug])
 }
@@ -121,26 +140,25 @@ model OrderItem {
 }
 
 model Cart {
-  id          String      @id @default(uuid())
-  userId      String
-  totalPrice  Float
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  items       CartItem[]
-  user        User       @relation(fields: [userId], references: [id])
-  
+  id         String     @id @default(uuid())
+  userId     String
+  totalPrice Float
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  items      CartItem[]
+  user       User       @relation(fields: [userId], references: [id])
 }
 
 model CartItem {
-  id          String      @id @default(uuid())
-  cartId      String
-  productId   String
-  quantity    Int
-  price       Float
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  cart        Cart       @relation(fields: [cartId], references: [id])
-  product     Product    @relation(fields: [productId], references: [id])
+  id        String   @id @default(uuid())
+  cartId    String
+  productId String
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 enum TRANSACTION_STATUS {
@@ -149,19 +167,12 @@ enum TRANSACTION_STATUS {
   CANCELED
 }
 
-model Element {
-  id            Int       @id @default(autoincrement())
-  name          String
-  price         Float
-  quantity      Int
-}
-
 model ShippingType {
   id           Int      @id @default(autoincrement())
   name         String
   description  String?
   price        Float
-  deliveryTime Int      // Delivery time in days
+  deliveryTime Int // Delivery time in days
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
