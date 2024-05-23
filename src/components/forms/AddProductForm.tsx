@@ -44,7 +44,7 @@ export function AddProductForm() {
     },
   })
 
-  const onSubmit = async (values: productPayload) => {
+  const onSubmit = async (values: productPayload) => { 
     console.log("🚀 ~ onSubmit ~ values:", values)
     try {
       setIsLoading(true)
@@ -120,37 +120,10 @@ export function AddProductForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='skateboards'>Skateboards</SelectItem>
-                    <SelectItem value='clothing'>Clothing</SelectItem>
-                    <SelectItem value='shoes'>Shoes</SelectItem>
-                    <SelectItem value='accessories'>Accessories</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='categoryId'
-            render={({ field }) => (
-              <FormItem className='flex-1 w-full'>
-                <FormLabel>Category</FormLabel>
-                <Select
-                  value={field.value}
-                  onValueChange={(value: typeof field.value) =>
-                    field.onChange(value)
-                  }
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Select a category' />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value='skateboards'>Skateboards</SelectItem>
-                    <SelectItem value='clothing'>Clothing</SelectItem>
-                    <SelectItem value='shoes'>Shoes</SelectItem>
+                    <SelectItem value='necklaces'>Necklaces</SelectItem>
+                    <SelectItem value='earrings'>Ear-rings</SelectItem>
+                    <SelectItem value='bangles'>Bangles</SelectItem>
+                    <SelectItem value='rings'>Rings</SelectItem>
                     <SelectItem value='accessories'>Accessories</SelectItem>
                   </SelectContent>
                 </Select>
