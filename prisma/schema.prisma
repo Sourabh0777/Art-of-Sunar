@@ -84,30 +84,39 @@ model Category {
 }
 
 model Product {
-  id            String      @id @default(uuid())
-  name          String
-  elementId     Int
-  weightInGrams Int
-  metalAmount   Float
-  makingCharges Float
-  stock         Int
-  rating        Int
-  gst           Float
-  discount      Float
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  images      Json
+  stock       Int
+
+  categoryId String
+  elementId  Int
+
+  weightInGrams          Int?
+  xPercentageMetalAmount Int?
+  discount               Int?
+
+  metalAmount   Int?
+  makingCharges Int?
+  productPrice  Int?
+  rating        Int  @default(5)
+  gst           Int?
   totalAmount   Int
-  slug          String
-  description   String?
-  price         Decimal
-  images        Json
-  storeId       String
-  categoryId    String
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  orderItems    OrderItem[]
-  Category      Category    @relation(fields: [categoryId], references: [slug])
-  Store         Store       @relation(fields: [storeId], references: [id])
-  CartItem      CartItem[]
-  Element       Element     @relation(fields: [elementId], references: [id])
+
+  slug String
+
+  storeId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems OrderItem[]
+  CartItem   CartItem[]
+  Category   Category    @relation(fields: [categoryId], references: [slug])
+  Element    Element     @relation(fields: [elementId], references: [id])
+
+  Store Store @relation(fields: [storeId], references: [id])
 
   @@index([storeId, categoryId, name, slug])
 }
