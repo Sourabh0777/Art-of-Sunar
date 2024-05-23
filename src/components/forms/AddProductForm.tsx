@@ -44,6 +44,7 @@ export function AddProductForm() {
   })
 
   const onSubmit = async (values: productPayload) => {
+    console.log("🚀 ~ onSubmit ~ values:", values)
     try {
       setIsLoading(true)
       const { data }: { data: Product } = await axios.post(
@@ -67,7 +68,7 @@ export function AddProductForm() {
       >
         <FormField
           control={form.control}
-          name='name'
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
@@ -138,6 +139,30 @@ export function AddProductForm() {
                   <div className='relative'>
                     <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center'>
                       Rp
+                    </p>
+                    <Input
+                      type='number'
+                      className='pl-8'
+                      placeholder='0'
+                      disabled={isLoading}
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='price'
+            render={({ field }) => (
+              <FormItem className='flex-1 w-full'>
+                <FormLabel>Weight</FormLabel>
+                <FormControl>
+                  <div className='relative'>
+                    <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center'>
+                      GM
                     </p>
                     <Input
                       type='number'

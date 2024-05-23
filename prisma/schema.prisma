@@ -87,7 +87,7 @@ model Product {
   id            String      @id @default(uuid())
   name          String
   elementId     Int
-  weightingrams Int
+  weightInGrams Int
   metalAmount   Float
   makingCharges Float
   stock         Int

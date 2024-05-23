@@ -1,30 +1,42 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 export const productSchema = z.object({
   name: z
     .string()
     .min(3, {
-      message: 'Name must contain at least 3 character(s)',
+      message: "Name must contain at least 3 character(s)",
     })
     .max(50, {
-      message: 'Name must contain at most 50 character(s)',
+      message: "Name must contain at most 50 character(s)",
     }),
+  discount: z.coerce.number({
+    required_error: "Price must be filled",
+  }),
+  weightInGrams: z.coerce.number({
+    required_error: "Price must be filled",
+  }),
+  elementId: z.coerce.number({
+    required_error: "Price must be filled",
+  }),
+  metalAmount: z.coerce.number({
+    required_error: "Price must be filled",
+  }),
   description: z
     .string()
     .max(500, {
-      message: 'Description must contain at most 500 character(s)',
+      message: "Description must contain at most 500 character(s)",
     })
     .optional(),
   category: z.string().min(1),
   price: z.coerce
     .number({
-      required_error: 'Price must be filled',
+      required_error: "Price must be filled",
     })
     .min(1000, {
-      message: 'Price must be greater than or equal to Rp 1.000',
+      message: "Price must be greater than or equal to Rp 1.000",
     })
     .max(100000000, {
-      message: 'Price must be lower than or equal to Rp 100.000.000',
+      message: "Price must be lower than or equal to Rp 100.000.000",
     }),
   images: z
     .object({
@@ -38,6 +50,6 @@ export const productSchema = z.object({
       url: z.string(),
     })
     .array(),
-})
+});
 
-export type productPayload = z.infer<typeof productSchema>
+export type productPayload = z.infer<typeof productSchema>;
