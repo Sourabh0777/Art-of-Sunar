@@ -43,9 +43,11 @@ export function AddProductForm() {
       description: '',
     },
   })
+  const { watch } = form;
+  const formValues = watch();
 
-  const onSubmit = async (values: productPayload) => { 
-    console.log("🚀 ~ onSubmit ~ values:", values)
+  const onSubmit = async (values: productPayload) => {
+    console.log("🚀 ~ onSubmit ~ values:", values);
     try {
       setIsLoading(true)
       const { data }: { data: Product } = await axios.post(
@@ -55,6 +57,7 @@ export function AddProductForm() {
       toast.success('Product is created.')
       router.push(`/${data.storeId}/${data.slug}?productId=${data.id}`)
     } catch (error: any) {
+      console.log("🚀 ~ onSubmit ~ error:", error)
       toast.error(error.response.data)
     } finally {
       setIsLoading(false)
@@ -104,7 +107,7 @@ export function AddProductForm() {
         <div className='flex flex-col items-start gap-6 sm:flex-row'>
           <FormField
             control={form.control}
-            name='categoryId'
+            name='category'
             render={({ field }) => (
               <FormItem className='flex-1 w-full'>
                 <FormLabel>Category</FormLabel>
@@ -131,29 +134,39 @@ export function AddProductForm() {
               </FormItem>
             )}
           />
-        </div>
-        <div className='flex flex-col items-start gap-6 sm:flex-row'>
           <FormField
             control={form.control}
-            name='stock'
+            name='elementId'
             render={({ field }) => (
               <FormItem className='flex-1 w-full'>
-                <FormLabel>Stock</FormLabel>
-                <FormControl>
-                  <div className='relative'>
-                    <Input
-                      type='number'
-                      className='pl-8'
-                      placeholder='0'
-                      disabled={isLoading}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
+                <FormLabel>Element</FormLabel>
+                <Select
+                  value={field.value}
+                  onValueChange={(value: typeof field.value) =>
+                    field.onChange(value)
+                  }
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select a category' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value='18'>Gold 18</SelectItem>
+                    <SelectItem value='22'>Gold 22</SelectItem>
+                    <SelectItem value='24'>Gold 24</SelectItem>
+                    <SelectItem value='4'>Silver</SelectItem>
+                    <SelectItem value='5'>Artificial</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
+        </div>
+
+        {formValues?.elementId == "5" ? null : <div className='flex flex-col items-start gap-6 sm:flex-row'>
+
           <FormField
             control={form.control}
             name='weightInGrams'
@@ -227,9 +240,33 @@ export function AddProductForm() {
             )}
           />
         </div>
-
+        }
 
         <FormField
+          control={form.control}
+          name='stock'
+          render={({ field }) => (
+            <FormItem className='flex-1 w-full'>
+              <FormLabel>Stock</FormLabel>
+              <FormControl>
+                <div className='relative'>
+                  <Input
+                    type='number'
+                    className='pl-8'
+                    placeholder='0'
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+
+
+        {formValues.elementId == '5' ? <FormField
           control={form.control}
           name='price'
           render={({ field }) => (
@@ -252,7 +289,7 @@ export function AddProductForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> : null}
         <FormField
           control={form.control}
           name='images'

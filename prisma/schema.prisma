@@ -69,17 +69,17 @@ model Store {
 }
 
 model Element {
-  id      Int       @id @default(autoincrement())
+  id      String    @id @unique
   name    String
   price   Float
   Product Product[]
 }
 
 model Category {
-  slug        String    @id
-  id          String
+  id          String    @id @unique
   name        String
   description String
+  slug        String
   Product     Product[]
 }
 
@@ -90,8 +90,8 @@ model Product {
   images      Json
   stock       Int
 
-  categoryId String
-  elementId  Int
+  category  String
+  elementId String
 
   weightInGrams          Int?
   xPercentageMetalAmount Int?
@@ -102,9 +102,9 @@ model Product {
   productPrice  Int?
   rating        Int  @default(5)
   gst           Int?
-  totalAmount   Int
+  price         Int?
 
-  slug String
+  slug String?
 
   storeId String
 
@@ -113,12 +113,12 @@ model Product {
 
   orderItems OrderItem[]
   CartItem   CartItem[]
-  Category   Category    @relation(fields: [categoryId], references: [slug])
+  Category   Category    @relation(fields: [category], references: [id])
   Element    Element     @relation(fields: [elementId], references: [id])
 
   Store Store @relation(fields: [storeId], references: [id])
 
-  @@index([storeId, categoryId, name, slug])
+  @@index([storeId, category, name, slug])
 }
 
 model Order {
