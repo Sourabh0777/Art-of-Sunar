@@ -17,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/Form'
-import { Input } from '@/components/ui/Input'
 import {
   Select,
   SelectContent,
@@ -25,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select'
+import { Input } from '@/components/ui/Input'
+
 import { Textarea } from '@/components/ui/Textarea'
 import { productPayload, productSchema } from '@/lib/validators/product'
 
@@ -131,14 +132,65 @@ export function AddProductForm() {
           />
           <FormField
             control={form.control}
-            name='price'
+            name='categoryId'
             render={({ field }) => (
               <FormItem className='flex-1 w-full'>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Category</FormLabel>
+                <Select
+                  value={field.value}
+                  onValueChange={(value: typeof field.value) =>
+                    field.onChange(value)
+                  }
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select a category' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value='skateboards'>Skateboards</SelectItem>
+                    <SelectItem value='clothing'>Clothing</SelectItem>
+                    <SelectItem value='shoes'>Shoes</SelectItem>
+                    <SelectItem value='accessories'>Accessories</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className='flex flex-col items-start gap-6 sm:flex-row'>
+          <FormField
+            control={form.control}
+            name='stock'
+            render={({ field }) => (
+              <FormItem className='flex-1 w-full'>
+                <FormLabel>Stock</FormLabel>
+                <FormControl>
+                  <div className='relative'>
+                    <Input
+                      type='number'
+                      className='pl-8'
+                      placeholder='0'
+                      disabled={isLoading}
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='weightInGrams'
+            render={({ field }) => (
+              <FormItem className='flex-1 w-full'>
+                <FormLabel>Weight</FormLabel>
                 <FormControl>
                   <div className='relative'>
                     <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center'>
-                      Rp
+                      gm
                     </p>
                     <Input
                       type='number'
@@ -155,14 +207,38 @@ export function AddProductForm() {
           />
           <FormField
             control={form.control}
-            name='price'
+            name='xPercentageMetalAmount'
             render={({ field }) => (
               <FormItem className='flex-1 w-full'>
-                <FormLabel>Weight</FormLabel>
+                <FormLabel>X % M Amount</FormLabel>
                 <FormControl>
                   <div className='relative'>
                     <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center'>
-                      GM
+                      %
+                    </p>
+                    <Input
+                      type='number'
+                      className='pl-8'
+                      placeholder='0'
+                      disabled={isLoading}
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='discount'
+            render={({ field }) => (
+              <FormItem className='flex-1 w-full'>
+                <FormLabel>Discount</FormLabel>
+                <FormControl>
+                  <div className='relative'>
+                    <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center'>
+                      %
                     </p>
                     <Input
                       type='number'
@@ -178,6 +254,32 @@ export function AddProductForm() {
             )}
           />
         </div>
+
+
+        <FormField
+          control={form.control}
+          name='price'
+          render={({ field }) => (
+            <FormItem className='flex-1 w-full'>
+              <FormLabel>Price</FormLabel>
+              <FormControl>
+                <div className='relative'>
+                  <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center'>
+                    Rp
+                  </p>
+                  <Input
+                    type='number'
+                    className='pl-8'
+                    placeholder='0'
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name='images'
