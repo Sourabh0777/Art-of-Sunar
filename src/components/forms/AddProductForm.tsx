@@ -50,12 +50,28 @@ export function AddProductForm() {
     console.log("🚀 ~ onSubmit ~ values:", values);
     try {
       setIsLoading(true)
-      const { data }: { data: Product } = await axios.post(
-        `/api/stores/${params.storeId}/products`,
-        values,
-      )
+      if (values.elementId == "artificial" && values.price && values.discount) {
+        values.weightInGrams = 0;
+        values.xPercentageMetalAmount = 0;
+        values.price = values?.price * 1 - values?.discount
+        console.log("🚀 ~ onSubmit ~ values:", values)
+        const { data }: { data: Product } = await axios.post(
+          `/api/stores/${params.storeId}/products`,
+          values,
+        )
+        router.push(`/${data.storeId}/${data.slug}?productId=${data.id}`)
+      }
+      else {
+        // values.metalAmount = values.weightInGrams * values.xPercentageMetalAmount / 100
+        // values.makingCharges = values.metalAmount + values.xPercentageMetalAmount + (1 - values.discount)
+        // values.productPrice= 
+        const { data }: { data: Product } = await axios.post(
+          `/api/stores/${params.storeId}/products`,
+          values,
+        )
+      }
       toast.success('Product is created.')
-      router.push(`/${data.storeId}/${data.slug}?productId=${data.id}`)
+      // router.push(`/${data.storeId}/${data.slug}?productId=${data.id}`)
     } catch (error: any) {
       console.log("🚀 ~ onSubmit ~ error:", error)
       toast.error(error.response.data)
@@ -123,8 +139,11 @@ export function AddProductForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='gold'>gold</SelectItem>
-                    <SelectItem value='silver'>silver</SelectItem>
+                    <SelectItem value='necklaces'>Necklaces</SelectItem>
+                    <SelectItem value='earrings'>Earrings</SelectItem>
+                    <SelectItem value='rings'>Rings</SelectItem>
+                    <SelectItem value='bracelets'>Bracelets</SelectItem>
+                    <SelectItem value='anklets'>Anklets</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -149,11 +168,11 @@ export function AddProductForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='18'>Gold 18</SelectItem>
-                    <SelectItem value='22'>Gold 22</SelectItem>
-                    <SelectItem value='24'>Gold 24</SelectItem>
-                    <SelectItem value='4'>Silver</SelectItem>
-                    <SelectItem value='5'>Artificial</SelectItem>
+                    <SelectItem value={{ id: 'gold_18', elementPrice: 20000 }}>Gold 18</SelectItem>
+                    <SelectItem value={{ id: 'gold_22', elementPrice: 22000 }}>Gold 22</SelectItem>
+                    <SelectItem value={{ id: 'gold_24', elementPrice: 24000 }}>Gold 24</SelectItem>
+                    <SelectItem value={{ id: 'silver_plated', elementPrice: 1000 }}>Silver Plated</SelectItem>
+                    <SelectItem value={{ id: 'artificial' }}>Artificial</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -162,7 +181,7 @@ export function AddProductForm() {
           />
         </div>
 
-        {formValues?.elementId == "5" ? null : <div className='flex flex-col items-start gap-6 sm:flex-row'>
+        {formValues?.elementId?.id == "artificial" ? null : <div className='flex flex-col items-start gap-6 sm:flex-row'>
 
           <FormField
             control={form.control}
@@ -212,33 +231,33 @@ export function AddProductForm() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name='discount'
-            render={({ field }) => (
-              <FormItem className='flex-1 w-full'>
-                <FormLabel>Discount</FormLabel>
-                <FormControl>
-                  <div className='relative'>
-                    <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center'>
-                      %
-                    </p>
-                    <Input
-                      type='number'
-                      className='pl-8'
-                      placeholder='0'
-                      disabled={isLoading}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
         </div>
         }
-
+        <FormField
+          control={form.control}
+          name='discount'
+          render={({ field }) => (
+            <FormItem className='flex-1 w-full'>
+              <FormLabel>Discount</FormLabel>
+              <FormControl>
+                <div className='relative'>
+                  <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center'>
+                    %
+                  </p>
+                  <Input
+                    type='number'
+                    className='pl-8'
+                    placeholder='0'
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name='stock'
@@ -263,7 +282,7 @@ export function AddProductForm() {
 
 
 
-        {formValues.elementId == '5' ? <FormField
+        {formValues.elementId.id == 'artificial' ? <FormField
           control={form.control}
           name='price'
           render={({ field }) => (

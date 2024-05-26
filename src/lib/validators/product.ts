@@ -23,16 +23,22 @@ export const productSchema = z.object({
     required_error: "Quantity of available stock must be filled",
   }),
   categoryId: z.string().min(1),
-  elementId: z.coerce.string().min(1),
-  weightInGrams: z.coerce.number({
-    required_error: "Weight of the product must be filled",
-  }).optional(),
-  xPercentageMetalAmount: z.coerce.number({
-    required_error: "X Percentage of metal amount must be filled",
-  }).optional(),
-  discount: z.coerce.number({
-    required_error: "Price must be filled",
-  }).optional(),
+  elementId: z.object({ id: z.coerce.string().min(1), elementPrice: z.coerce.number() }),
+  weightInGrams: z.coerce
+    .number({
+      required_error: "Weight of the product must be filled",
+    })
+    .optional(),
+  xPercentageMetalAmount: z.coerce
+    .number({
+      required_error: "X Percentage of metal amount must be filled",
+    })
+    .optional(),
+  discount: z.coerce
+    .number({
+      required_error: "Price must be filled",
+    })
+    .optional(),
   price: z.coerce
     .number({
       required_error: "Price must be filled",
@@ -42,7 +48,8 @@ export const productSchema = z.object({
     })
     .max(100000000, {
       message: "Price must be lower than or equal to Rp 100.000.000",
-    }).optional(),
+    })
+    .optional(),
 });
 
 export type productPayload = z.infer<typeof productSchema>;

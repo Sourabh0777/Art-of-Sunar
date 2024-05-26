@@ -2,32 +2,84 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const goldItems = await prisma.category.create({
+  const Necklaces = await prisma.category.create({
     data: {
-      name: "Gold jewellery",
-      slug: "gold",
+      name: "Necklaces",
+      slug: "necklaces",
     },
   });
-  const SilverItems = await prisma.category.create({
+  const Earrings = await prisma.category.create({
     data: {
-      name: "Silver jewellery",
-      slug: "silver",
+      name: "Earrings",
+      slug: "earrings",
     },
   });
-  const Artificial = await prisma.category.create({
+  const Rings = await prisma.category.create({
     data: {
-      name: "Artificial jewellery",
-      slug: "artificial",
+      name: "Rings",
+      slug: "rings",
     },
   });
-  const accessories = await prisma.category.create({
+  const Bracelets = await prisma.category.create({
     data: {
-      name: "Accessories",
-      slug: "accessories",
+      name: "Bracelets",
+      slug: "bracelets",
+    },
+  });
+  const Anklets = await prisma.category.create({
+    data: {
+      name: "Anklets",
+      slug: "anklets",
+    },
+  });
+  const gold_18 = await prisma.element.create({
+    data: {
+      id: "gold_18",
+      name: "Gold 18 Karat",
+      price: 20000,
+    },
+  });
+  const gold_22 = await prisma.element.create({
+    data: {
+      id: "gold_22",
+      name: "Gold 22 Karat",
+      price: 22000,
+    },
+  });
+  const gold_24 = await prisma.element.create({
+    data: {
+      id: "gold_24",
+      name: "Gold 24 Karat",
+      price: 24000,
+    },
+  });
+  const silver = await prisma.element.create({
+    data: {
+      id: "silver_plated",
+      name: "Silver Plated",
+      price: 10000,
+    },
+  });
+  const artificial = await prisma.element.create({
+    data: {
+      id: "artificial",
+      name: "Artificial",
+      price: 10000,
     },
   });
 
-  console.log({ goldItems, SilverItems, Artificial, accessories });
+  console.log({
+    Necklaces,
+    Earrings,
+    Rings,
+    Bracelets,
+    Anklets,
+    gold_18,
+    gold_22,
+    gold_24,
+    silver,
+    artificial,
+  });
 }
 main()
   .then(async () => {
@@ -38,3 +90,4 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+//ts-node prisma/seed.ts
