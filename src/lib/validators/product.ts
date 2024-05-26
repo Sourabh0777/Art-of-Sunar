@@ -22,7 +22,7 @@ export const productSchema = z.object({
   stock: z.coerce.number({
     required_error: "Quantity of available stock must be filled",
   }),
-  category: z.string().min(1),
+  categoryId: z.string().min(1),
   elementId: z.coerce.string().min(1),
   weightInGrams: z.coerce.number({
     required_error: "Weight of the product must be filled",

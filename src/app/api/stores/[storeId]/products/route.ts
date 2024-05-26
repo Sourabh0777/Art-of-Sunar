@@ -14,12 +14,23 @@ export async function POST(req: Request, { params }: { params: { storeId: string
     }
 
     const body = await req.json();
+    const {
+      name,
+      description,
+      images,
+      stock,
+      categoryId,
+      elementId,
+      weightInGrams,
+      xPercentageMetalAmount,
+      discount,
+      price,
+    } = productSchema.parse(body);
 
-    const data = productSchema.parse(body);
-
-    const slug = slugify(data?.name, {
+    const slug = slugify(name, {
       lower: true,
     });
+
     const isProductExist = await prisma.product.findFirst({
       where: {
         slug,
@@ -32,10 +43,19 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         status: 409,
       });
     }
-    console.log("🚀 ~ POST ~ data:", data);
+    // Fields name,images,stock,categoryId,elementId
 
     const product = await prisma.product.create({
-      data: data,
+      data: {
+        name,
+        description,
+        images,
+        stock,
+        slug,
+        categoryId: categoryId,
+        elementId,
+        storeId: params.storeId,
+      },
     });
 
     return Response.json(product);

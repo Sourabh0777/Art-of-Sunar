@@ -107,7 +107,7 @@ export function AddProductForm() {
         <div className='flex flex-col items-start gap-6 sm:flex-row'>
           <FormField
             control={form.control}
-            name='category'
+            name='categoryId'
             render={({ field }) => (
               <FormItem className='flex-1 w-full'>
                 <FormLabel>Category</FormLabel>
@@ -123,11 +123,8 @@ export function AddProductForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='necklaces'>Necklaces</SelectItem>
-                    <SelectItem value='earrings'>Ear-rings</SelectItem>
-                    <SelectItem value='bangles'>Bangles</SelectItem>
-                    <SelectItem value='rings'>Rings</SelectItem>
-                    <SelectItem value='accessories'>Accessories</SelectItem>
+                    <SelectItem value='gold'>gold</SelectItem>
+                    <SelectItem value='silver'>silver</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
