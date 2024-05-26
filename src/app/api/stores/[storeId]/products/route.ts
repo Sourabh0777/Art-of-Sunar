@@ -55,6 +55,10 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         categoryId: categoryId,
         elementId,
         storeId: params.storeId,
+        price: price ? price : 0,
+        weightInGrams: weightInGrams ? weightInGrams : 0,
+        xPercentageMetalAmount: xPercentageMetalAmount ? xPercentageMetalAmount : 0,
+        discount: discount ? discount : 0,
       },
     });
 
