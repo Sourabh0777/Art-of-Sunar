@@ -168,11 +168,11 @@ export function AddProductForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={{ id: 'gold_18', elementPrice: 20000 }}>Gold 18</SelectItem>
-                    <SelectItem value={{ id: 'gold_22', elementPrice: 22000 }}>Gold 22</SelectItem>
-                    <SelectItem value={{ id: 'gold_24', elementPrice: 24000 }}>Gold 24</SelectItem>
-                    <SelectItem value={{ id: 'silver_plated', elementPrice: 1000 }}>Silver Plated</SelectItem>
-                    <SelectItem value={{ id: 'artificial' }}>Artificial</SelectItem>
+                    <SelectItem value='gold_18'>Gold 18</SelectItem>
+                    <SelectItem value='gold_22'>Gold 22</SelectItem>
+                    <SelectItem value='gold_24'>Gold 24</SelectItem>
+                    <SelectItem value='silver_plated'>Silver Plated</SelectItem>
+                    <SelectItem value='artificial'>Artificial</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -181,7 +181,7 @@ export function AddProductForm() {
           />
         </div>
 
-        {formValues?.elementId?.id == "artificial" ? null : <div className='flex flex-col items-start gap-6 sm:flex-row'>
+        {formValues?.elementId == "artificial" ? null : <div className='flex flex-col items-start gap-6 sm:flex-row'>
 
           <FormField
             control={form.control}
@@ -282,7 +282,7 @@ export function AddProductForm() {
 
 
 
-        {formValues.elementId.id == 'artificial' ? <FormField
+        {formValues.elementId == 'artificial' ? <FormField
           control={form.control}
           name='price'
           render={({ field }) => (
