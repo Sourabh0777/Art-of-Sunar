@@ -25,8 +25,11 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       xPercentageMetalAmount,
       discount,
       price,
+      metalAmount,
+      makingCharges,
+      productPrice,
+      gst,
     } = productSchema.parse(body);
-
     const slug = slugify(name, {
       lower: true,
     });
@@ -44,25 +47,35 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       });
     }
     // Fields name,images,stock,categoryId,elementId
+    const a = productSchema.parse(body);
+    console.log(a);
 
-    const product = await prisma.product.create({
-      data: {
-        name,
-        description,
-        images,
-        stock,
-        slug,
-        categoryId: categoryId,
-        elementId,
-        storeId: params.storeId,
-        price: price ? price : 0,
-        weightInGrams: weightInGrams ? weightInGrams : 0,
-        xPercentageMetalAmount: xPercentageMetalAmount ? xPercentageMetalAmount : 0,
-        discount: discount ? discount : 0,
-      },
-    });
+    // const product = await prisma.product.create({
+    //   data: {
+    //     name,
+    //     description,
+    //     images,
+    //     stock,
+    //     slug,
+    //     categoryId: categoryId,
+    //     elementId,
+    //     storeId: params.storeId,
+    //     price: price ? price : 0,
+    //     weightInGrams: weightInGrams ? weightInGrams : 0,
+    //     xPercentageMetalAmount: xPercentageMetalAmount ? xPercentageMetalAmount : 0,
+    //     discount: discount ? discount : 0,
 
-    return Response.json(product);
+    //     metalAmount: metalAmount ? metalAmount : 0,
+    //     makingCharges: makingCharges ? makingCharges : 0,
+    //     productPrice: productPrice ? productPrice : 0,
+
+    //     gst,
+    //   },
+    // });
+
+    // return Response.json(product);
+
+    // return Response.json({ product: "asdasd" });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response("Invalid request data passed", { status: 422 });

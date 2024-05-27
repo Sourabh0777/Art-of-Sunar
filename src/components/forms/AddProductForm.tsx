@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Product } from '@prisma/client'
 import axios from 'axios'
 import { useParams, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 
@@ -30,6 +30,7 @@ import { Textarea } from '@/components/ui/Textarea'
 import { productPayload, productSchema } from '@/lib/validators/product'
 
 import { FileUpload } from './FileUpload'
+import prisma from '@/lib/db'
 
 export function AddProductForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -47,13 +48,42 @@ export function AddProductForm() {
   const formValues = watch();
 
   const onSubmit = async (values: productPayload) => {
-    console.log("🚀 ~ onSubmit ~ values:", values);
+
     try {
       setIsLoading(true)
-      if (values.elementId == "artificial" && values.price && values.discount) {
-        values.weightInGrams = 0;
-        values.xPercentageMetalAmount = 0;
-        values.price = values?.price * 1 - values?.discount
+      const elementIDndPrice: string[] = values.elementId.split("@");
+      const price = Number(elementIDndPrice[1]);
+      const elementId = elementIDndPrice[0];
+      // if (values.elementId == "artificial@0" && values?.price && values?.discount) {
+      //   // xPercentageMetalAmount = purity 
+      //   values.weightInGrams = 0;
+      //   values.xPercentageMetalAmount = 0;
+      //   values.price = values?.price * 1 - values?.discount
+      //   values.elementId = elementId
+      //   const { data }: { data: Product } = await axios.post(
+      //     `/api/stores/${params.storeId}/products`,
+      //     values,
+      //   )
+      //   router.push(`/${data.storeId}/${data.slug}?productId=${data.id}`)
+
+      // }
+      if (values.weightInGrams && values.xPercentageMetalAmount && values.discount) {
+        const xPercent = values.xPercentageMetalAmount / 100
+
+        values.metalAmount = values.weightInGrams * price;
+
+        values.makingCharges = values.metalAmount * xPercent;
+
+        const discount = (values.discount / 100) * values.makingCharges  //for  10  0.1
+
+
+        values.elementId = elementId
+
+        values.productPrice = values.metalAmount + values.makingCharges -discount
+
+        values.gst = 3 / 100 * values.productPrice
+
+        values.price = values.productPrice + values.gst
         console.log("🚀 ~ onSubmit ~ values:", values)
         const { data }: { data: Product } = await axios.post(
           `/api/stores/${params.storeId}/products`,
@@ -61,17 +91,7 @@ export function AddProductForm() {
         )
         router.push(`/${data.storeId}/${data.slug}?productId=${data.id}`)
       }
-      else {
-        // values.metalAmount = values.weightInGrams * values.xPercentageMetalAmount / 100
-        // values.makingCharges = values.metalAmount + values.xPercentageMetalAmount + (1 - values.discount)
-        // values.productPrice= 
-        const { data }: { data: Product } = await axios.post(
-          `/api/stores/${params.storeId}/products`,
-          values,
-        )
-      }
       toast.success('Product is created.')
-      // router.push(`/${data.storeId}/${data.slug}?productId=${data.id}`)
     } catch (error: any) {
       console.log("🚀 ~ onSubmit ~ error:", error)
       toast.error(error.response.data)
@@ -79,7 +99,16 @@ export function AddProductForm() {
       setIsLoading(false)
     }
   }
-
+  const [Elements, setElements] = useState<any | null>(null);
+  useEffect(() => {
+    const fetchElements = async () => {
+      const response = await axios.get("/api/elements");
+      if (response) {
+        setElements(response.data);
+      }
+    }
+    fetchElements()
+  }, [])
   return (
     <Form {...form}>
       <form
@@ -150,7 +179,7 @@ export function AddProductForm() {
               </FormItem>
             )}
           />
-          <FormField
+          {Elements && <FormField
             control={form.control}
             name='elementId'
             render={({ field }) => (
@@ -168,20 +197,19 @@ export function AddProductForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='gold_18'>Gold 18</SelectItem>
-                    <SelectItem value='gold_22'>Gold 22</SelectItem>
-                    <SelectItem value='gold_24'>Gold 24</SelectItem>
-                    <SelectItem value='silver_plated'>Silver Plated</SelectItem>
-                    <SelectItem value='artificial'>Artificial</SelectItem>
+                    {Elements.map((ele: any) => {
+                      return (<SelectItem value={`${`${ele.id}@${ele.price}`}`} key={ele.id}>{ele.name}</SelectItem>
+                      )
+                    })}
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
-          />
+          />}
         </div>
 
-        {formValues?.elementId == "artificial" ? null : <div className='flex flex-col items-start gap-6 sm:flex-row'>
+        {formValues?.elementId == "artificial@0" ? null : <div className='flex flex-col items-start gap-6 sm:flex-row'>
 
           <FormField
             control={form.control}
@@ -282,7 +310,7 @@ export function AddProductForm() {
 
 
 
-        {formValues.elementId == 'artificial' ? <FormField
+        {formValues.elementId == 'artificial@0' ? <FormField
           control={form.control}
           name='price'
           render={({ field }) => (

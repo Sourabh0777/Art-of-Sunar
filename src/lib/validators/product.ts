@@ -50,6 +50,10 @@ export const productSchema = z.object({
       message: "Price must be lower than or equal to Rp 100.000.000",
     })
     .optional(),
+  metalAmount: z.number().optional(),
+  makingCharges: z.number().optional(),
+  productPrice: z.number().optional(),
+  gst: z.number().optional(),
 });
 
 export type productPayload = z.infer<typeof productSchema>;
