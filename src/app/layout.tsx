@@ -6,6 +6,7 @@ import { ourFileRouter } from '@/app/api/uploadthing/core'
 import ClientProvider from '@/providers/ClientProvider'
 
 import './globals.css'
+import StoreProvider from './StoreProvider'
 
 export const metadata: Metadata = {
   title: 'Art Of Sunar',
@@ -54,7 +55,9 @@ export default function RootLayout({
              */
             routerConfig={extractRouterConfig(ourFileRouter)}
           />
-          {children}
+          <StoreProvider>
+            {children}
+          </StoreProvider>
         </ClientProvider>
       </body>
     </html>

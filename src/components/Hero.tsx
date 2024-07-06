@@ -1,11 +1,16 @@
+"use client"
 import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
 import { buttonVariants } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
+import { useAppSelector } from '@/lib/hooks'
 
-const Hero = async () => {
+const Hero = () => {
+  const state = useAppSelector((state) => state.cart)
+  console.log("🚀 ~ Hero ~ state:", state)
+
   return (
     <section className='relative'>
       <svg
