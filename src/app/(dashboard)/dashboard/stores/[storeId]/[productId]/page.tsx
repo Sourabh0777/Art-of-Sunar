@@ -15,11 +15,12 @@ const NewProductPage = async ({
 }: {
   params: { storeId: string; productId: string }
 }) => {
-  const product = await prisma.product.findUnique({
-    where: {
-      id: params.productId,
-    },
-  })
+  const product = false
+  // await prisma.product.findUnique({
+  //   where: {
+  //     id: params.productId,
+  //   },
+  // })
 
   if (!product) {
     redirect(`/dashboard/stores/${params.storeId}/products`)
