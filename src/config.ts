@@ -8,17 +8,21 @@ export const categories: Category[] = [
   {
     name: 'Gold jewellery',
     slug: 'gold',
+    description: null
   },
   {
     name: 'Silver jewellery',
     slug: 'silver',
+    description: null
   },
   {
     name: 'Artificial jewellery',
     slug: 'artificial',
+    description: null
   },
   {
     name: 'Accessories',
     slug: 'accessories',
+    description: null
   },
 ]

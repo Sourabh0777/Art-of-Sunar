@@ -26,7 +26,7 @@ export default async function ProductsPage({
     price: formatPrice(parseFloat(item.price)),
     name: item.name,
     discount: item.discount,
-    slug: item.slug,
+    slug: item.slug ?? '',
     storeId: item.storeId,
     category: item.Category.name,
     createdAt: item.createdAt,

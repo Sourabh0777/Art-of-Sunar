@@ -21,7 +21,7 @@ export async function PATCH(
 
     const body = await req.json()
 
-    const { name, description, category, price, images } =
+    const { name, description, categoryId, price, images } =
       productSchema.parse(body)
 
     const slug = slugify(name, {
@@ -50,7 +50,7 @@ export async function PATCH(
         name,
         description,
         slug,
-        categoryId: category,
+        categoryId: categoryId,
         price,
         images,
       },

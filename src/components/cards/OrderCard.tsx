@@ -26,7 +26,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
     const fetchProducts = async () => {
       try {
         const response = await getOrderItems(order.id)
-        setOrderItems(response)
+        setOrderItems(response ?? null)
       } catch (error) {
         console.log(error)
       } finally {

@@ -106,7 +106,7 @@ export function UpdateProductForm({ product }: { product: Product }) {
         <div className='flex flex-col items-start gap-6 sm:flex-row'>
           <FormField
             control={form.control}
-            name='category'
+            name='categoryId'
             render={({ field }) => (
               <FormItem className='flex-1 w-full'>
                 <FormLabel>Category</FormLabel>

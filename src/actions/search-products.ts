@@ -27,11 +27,13 @@ const searchProducts = async (query: string): Promise<SearchProducts[]> => {
   const productsByCategory = categories.map((category) => ({
     category: category.name,
     products: filteredProducts.filter(
-      (product) => product.categoryId === category.slug,
-    ),
+      (product) => product.categoryId === category.slug).map((product) => ({
+        ...product,
+        slug: product.slug ?? ''
+      }))
   }))
 
   return productsByCategory
 }
 
-export default searchProducts
+export default searchProducts;
