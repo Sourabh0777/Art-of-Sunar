@@ -2,28 +2,55 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 
+// Define the Cart type
+
+interface Cart {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
 // Define a type for the slice state
-interface cartState {
-  value: number
+export interface cartState {
+  cart: Cart[];
 }
 
 // Define the initial state using that type
-const initialState: cartState = {
-  value: 0,
-}
-
-export const cartSlice = createSlice({
-  name: 'cart',
-  initialState,
+const cartSlice = createSlice({
+  name: "cart",
+  initialState: { cart: [] } as cartState,
   reducers: {
-    updateCart: (state, action: PayloadAction<number>) => {
-      state.value = action.payload
+    addToCart: (state, action) => {
+      const itemInCart = state.cart.find(
+        (item: { id: any; }) => item.id === action.payload.id
+      );
+      if (itemInCart) {
+        if (itemInCart.quantity !== undefined) {
+          itemInCart.quantity++;
+        }
+      } else {
+        state.cart.push({ ...action.payload, quantity: 1 });
+      }
+    },
+    increaseQuantity: (state, action) => {
+      const item = state.cart.find((item: { id: any; }) => item.id === action.payload.id);
+      if (item && item.quantity !== undefined) {
+        item.quantity++;
+      }
+    },
+    decreaseQuantity: (state, action) => {
+      const item = state.cart.find((item: { id: any; }) => item.id === action.payload.id);
+      if (item && item.quantity !== undefined && item.quantity > 1) {
+        item.quantity--;
+      }
+    },
+    removeItem: (state, action) => {
+      state.cart = state.cart.filter((item: { id: any; }) => item.id !== action.payload.id);
     },
   },
-})
+});
 
-export const { updateCart } = cartSlice.actions
-
-export const selectCart = (state: RootState) => state.cart
+export const { addToCart, increaseQuantity, decreaseQuantity, removeItem } = cartSlice.actions;
 
 export default cartSlice.reducer

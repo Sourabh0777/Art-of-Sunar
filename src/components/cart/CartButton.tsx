@@ -3,6 +3,8 @@
 import { ShoppingCart } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useDispatch } from 'react-redux';
+import {addToCart} from '@/lib/features/cart/cartSlice';
 
 import { Button } from "@/components/ui/Button"
 import useCart from "@/hooks/useCart"

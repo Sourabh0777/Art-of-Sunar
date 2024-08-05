@@ -3,10 +3,14 @@
 import { useEffect, useState } from 'react'
 
 import useCart from '@/hooks/useCart'
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, increaseQuantity, decreaseQuantity, removeItem } from '@/lib/features/cart/cartSlice';
+
 
 import CartItem from '@/components/cart/CartItem'
 import Summary from '@/components/cart/Summary'
 import CartSkeleton from '@/components/skeletons/CartSkeleton'
+
 
 const CartPage = () => {
   const [isMounted, setIsMounted] = useState(false)
@@ -20,6 +24,7 @@ const CartPage = () => {
   if (!isMounted) {
     return <CartSkeleton />
   }
+  
 
   return (
     <div className='px-4 sm:px-6 lg:px-8 py-16'>
